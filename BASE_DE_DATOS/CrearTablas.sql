@@ -1,0 +1,107 @@
+CREATE TABLE usuarios (
+   id INT NOT NULL AUTO_INCREMENT,
+   login VARCHAR(15) NOT NULL,
+   password VARCHAR(30) NOT NULL,
+   nombre VARCHAR(50) NOT NULL,
+   apellidos VARCHAR(80),
+	cp INT NOT NULL,
+   email VARCHAR(50),
+   telefono VARCHAR(15),
+   telegramId INT,
+	dias VARCHAR(7),
+	horaInicio TIME,
+	horaFin TIME,
+	disponibilidad INT,
+   PRIMARY KEY (id)
+);
+
+CREATE TABLE roles (
+   id INT NOT NULL AUTO_INCREMENT,
+   nombre VARCHAR(50) NOT NULL,
+   PRIMARY KEY (id)
+);
+
+CREATE TABLE usuRoles (
+   id INT NOT NULL AUTO_INCREMENT,
+   idUsuario INT NOT NULL,
+   idRol INT,
+   PRIMARY KEY (id),
+	FOREIGN KEY (idUsuario) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE,  
+	FOREIGN KEY (idRol) REFERENCES roles(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE proyectos (
+   id INT NOT NULL AUTO_INCREMENT,
+   nombre VARCHAR(50) NOT NULL,
+   fechaInicio DATE NOT NULL,
+   fechaFin DATE NOT NULL,
+   PRIMARY KEY (id)
+);
+
+CREATE TABLE entidades (
+   id INT NOT NULL AUTO_INCREMENT,
+   nombre VARCHAR(50) NOT NULL,
+   PRIMARY KEY (id)
+);
+
+CREATE TABLE ubicaciones (
+   id INT NOT NULL AUTO_INCREMENT,
+	idEntidad INT,
+   nombre VARCHAR(50) NOT NULL,
+	direccion VARCHAR(150) NOT NULL,
+	cp INT NOT NULL,
+	poblacion VARCHAR(50) NOT NULL,
+	zona VARCHAR(50),
+	longitud DECIMAL(11,8),
+	latitud DECIMAL(11,8),
+   PRIMARY KEY (id),
+	FOREIGN KEY (idEntidad) REFERENCES entidades(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE proyFechas (
+   id INT NOT NULL AUTO_INCREMENT,
+	idProyecto INT NOT NULL,
+   fecha DATE NOT NULL,
+   PRIMARY KEY (id),
+	FOREIGN KEY (idProyecto) REFERENCES proyectos(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE proyTurnos (
+   id INT NOT NULL AUTO_INCREMENT,
+	idProyecto INT NOT NULL,
+   horaInicio TIME NOT NULL,
+   horaFin TIME NOT NULL,
+   PRIMARY KEY (id),
+	FOREIGN KEY (idProyecto) REFERENCES proyectos(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE proyUbicaciones (
+   id INT NOT NULL AUTO_INCREMENT,
+	idProyecto INT NOT NULL,
+   idUbicacion INT NOT NULL,
+	idCordinador INT,
+   PRIMARY KEY (id),
+	FOREIGN KEY (idProyecto) REFERENCES proyectos(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (idUbicacion) REFERENCES ubicaciones(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (idCordinador) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE planificacion (
+   id INT NOT NULL AUTO_INCREMENT,
+   idProyUbicaciones INT NOT NULL,
+   fecha DATE NOT NULL,
+   horaInicio TIME NOT NULL,
+   horaFin TIME NOT NULL,
+	recursos INT,
+   PRIMARY KEY (id),
+	FOREIGN KEY (idProyUbicaciones) REFERENCES proyUbicaciones(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE planUsuarios (
+   id INT NOT NULL AUTO_INCREMENT,
+	idPlanificacion INT NOT NULL,
+	idUsuario INT NOT NULL,
+   PRIMARY KEY (id),
+	FOREIGN KEY (idPlanificacion) REFERENCES planificacion(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (idUsuario) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
