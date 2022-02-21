@@ -105,3 +105,14 @@ CREATE TABLE planUsuarios (
 	FOREIGN KEY (idPlanificacion) REFERENCES planificacion(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (idUsuario) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE TABLE logApp (
+   id INT NOT NULL AUTO_INCREMENT,
+   fecha DATETIME NOT NULL,
+   idUsuario INT,
+   codigo VARCHAR(20) NOT NULL,
+   subcodigo VARCHAR(20) NOT NULL,
+   texto VARCHAR(1000) NOT NULL,
+   PRIMARY KEY (id),
+   FOREIGN KEY (idUsuario) REFERENCES usuarios(id)
+);
